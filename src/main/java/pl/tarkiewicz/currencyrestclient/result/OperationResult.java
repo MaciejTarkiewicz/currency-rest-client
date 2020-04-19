@@ -3,7 +3,6 @@ package pl.tarkiewicz.currencyrestclient.result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import pl.tarkiewicz.currencyrestclient.getDto.GetResponseDto;
-import pl.tarkiewicz.currencyrestclient.postDto.PostResponseDto;
 
 public class OperationResult {
 

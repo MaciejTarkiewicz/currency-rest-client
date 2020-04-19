@@ -2,6 +2,7 @@ package pl.tarkiewicz.currencyrestclient;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,24 +37,17 @@ public class CurrencyController {
     }
 
     @GetMapping("/currencies/{currency}")
-    public ResponseEntity<?> getCurrency(@PathVariable String currency, @RequestParam(required = false) List<String> filter) throws JsonProcessingException {
+    public ResponseEntity<?> getCurrency(@PathVariable String currency, @RequestParam(required = false) List<String> filter) {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String body = restTemplate.exchange(createUrl(currency, filter), HttpMethod.GET, currencyService.prepareHeaders(), String.class).getBody();
-            return OperationResult.success(objectMapper.readValue(body, GetResponseDto.class));
-        } catch (Exception e) {
-            return OperationResult.failure(e.getMessage());
-        }
-
-    }
-
-    private String createUrl(String currency, List<String> filter) {
-        if (filter == null || filter.isEmpty()) {
-            return URL + currency;
-        } else {
-            return URL + currency + "?filter_asset_id=" + String.join(",", filter);
-        }
+        Optional<String> body = Optional.ofNullable(restTemplate.exchange(currencyService.createUrl(currency, filter), HttpMethod.GET, currencyService.prepareHeaders(), String.class).getBody());
+        return body.map(request -> {
+            try {
+                return OperationResult.success(objectMapper.readValue(body.get(), GetResponseDto.class));
+            } catch (JsonProcessingException e) {
+                return OperationResult.failure(e.getMessage());
+            }
+        }).orElse(OperationResult.failure("Bad Request"));
 
     }
 

@@ -21,7 +21,7 @@ public class CurrencyService {
         return new HttpEntity<>(headers);
     }
 
-    private String createUrl(String currency, List<String> filter) {
+    public String createUrl(String currency, List<String> filter) {
         if (filter == null || filter.isEmpty()) {
             return URL + currency;
         } else {
