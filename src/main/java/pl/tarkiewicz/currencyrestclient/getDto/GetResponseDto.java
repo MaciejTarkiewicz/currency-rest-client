@@ -1,4 +1,4 @@
-package pl.tarkiewicz.currencyrestclient;
+package pl.tarkiewicz.currencyrestclient.getDto;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Dto {
+public class GetResponseDto {
 
     @JsonAlias("asset_id_base")
     String source;
-    List<Rate> rates;
+    List<RateDto> rates;
 
 }

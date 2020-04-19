@@ -1,4 +1,4 @@
-package pl.tarkiewicz.currencyrestclient;
+package pl.tarkiewicz.currencyrestclient.getDto;
 
 import java.math.BigDecimal;
 
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class Rate {
+public class RateDto {
 
     @JsonAlias("asset_id_quote")
     String name;

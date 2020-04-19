@@ -1,4 +1,4 @@
-package pl.tarkiewicz.currencyrestclient;
+package pl.tarkiewicz.currencyrestclient.postDto;
 
 import java.math.BigDecimal;
 
