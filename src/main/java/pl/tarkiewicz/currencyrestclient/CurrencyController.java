@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.tarkiewicz.currencyrestclient.getDto.GetResponseDto;
 import pl.tarkiewicz.currencyrestclient.postDto.Command;
-import pl.tarkiewicz.currencyrestclient.result.GetOperationResult;
-import pl.tarkiewicz.currencyrestclient.result.PostOperationResult;
+import pl.tarkiewicz.currencyrestclient.result.OperationResult;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyGetService;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyPostService;
 
@@ -28,36 +27,31 @@ public class CurrencyController {
     private final CurrencyPostService currencyPostService;
 
     @GetMapping("/currencies/{currency}")
-    public ResponseEntity<?> getCurrency(@PathVariable String currency, @RequestParam(required = false) List<String> filter) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Optional<String> body = currencyGetService.prepareBody(currency, filter);
+    public ResponseEntity<?> getCurrencyExchange(@PathVariable String currency, @RequestParam(required = false) List<String> filter) {
+        Optional<String> body = currencyGetService.getDataFromApi(currency, filter);
         return body.map(request -> {
             try {
-                return GetOperationResult.success(objectMapper.readValue(request, GetResponseDto.class));
+                return OperationResult.success(currencyGetService.mapDataToResponse(request));
             } catch (JsonProcessingException e) {
-                return GetOperationResult.failure(e.getMessage());
+                return OperationResult.failureRequest(e.getMessage());
             }
-        }).orElse(GetOperationResult.failure("Bad Request"));
+        }).orElse(OperationResult.failureExternalApi());
 
     }
 
     @PostMapping("/currencies/exchange")
-    public ResponseEntity<?> CalculateCurrency(@RequestBody Command command) {
-        GetResponseDto getResponseDto = getGetResponseDto(command);
-        Optional<GetResponseDto> cos = Optional.ofNullable(getResponseDto);
-        return cos.map(responseDto -> {
-            try {
-                return currencyPostService.successResultCreator(command, responseDto);
-            } catch (Exception e) {
-                return PostOperationResult.failure("Bad Request!");
-            }
-        }).orElse(PostOperationResult.failure("Bad Request!"));
-
+    @SuppressWarnings("ConstantConditions")
+    public ResponseEntity<?> exchangeCurrency(@RequestBody Command command) {
+        ResponseEntity<?> responseEntity = getResponse(command);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return OperationResult.success(currencyPostService.successResultCreator(command, (GetResponseDto) responseEntity.getBody()));
+        } else {
+            return responseEntity;
+        }
     }
 
-    private GetResponseDto getGetResponseDto(Command command) {
-        ResponseEntity<?> getResponseDtoEntity = getCurrency(command.getFrom(), command.getTo());
-        return (GetResponseDto) getResponseDtoEntity.getBody();
+    private ResponseEntity<?> getResponse(Command command) {
+        return getCurrencyExchange(command.getFrom(), command.getTo());
     }
 
 }

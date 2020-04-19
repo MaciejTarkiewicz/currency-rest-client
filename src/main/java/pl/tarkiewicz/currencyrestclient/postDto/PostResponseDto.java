@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PostResponseDto {
+public class PostResponseDto implements ResponseDto {
 
     String from;
     Map<String, CurrencyDto> to;
