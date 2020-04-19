@@ -13,8 +13,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import pl.tarkiewicz.currencyrestclient.getDto.GetResponseDto;
@@ -26,9 +26,9 @@ import pl.tarkiewicz.currencyrestclient.service.CurrencyGetService;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyPostService;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class CurrencyControllerTest {
 
-    @Spy
     CurrencyGetService currencyGetService = Mockito.mock(CurrencyGetService.class);
     CurrencyPostService currencyPostService = new CurrencyPostService();
     CurrencyController currencyController = new CurrencyController(currencyGetService, currencyPostService);

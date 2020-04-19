@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.tarkiewicz.currencyrestclient.getDto.GetResponseDto;
 import pl.tarkiewicz.currencyrestclient.postDto.Command;
-import pl.tarkiewicz.currencyrestclient.postDto.PostResponseDto;
 import pl.tarkiewicz.currencyrestclient.result.OperationResult;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyGetService;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyPostService;
