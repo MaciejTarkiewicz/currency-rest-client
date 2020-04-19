@@ -15,9 +15,9 @@ import pl.tarkiewicz.currencyrestclient.postDto.PostResponseDto;
 @Service
 public class CurrencyPostService {
 
-    private static final BigDecimal provision = new BigDecimal("0.01");
+    private static final BigDecimal PROVISION = new BigDecimal("0.01");
 
-    public PostResponseDto successResultCreator(Command command, GetResponseDto responseDto) {
+    public PostResponseDto apply(Command command, GetResponseDto responseDto) {
         return PostResponseDto.builder()
                 .from(responseDto.getSource())
                 .to(toTargetCurrency(command, responseDto))
@@ -32,7 +32,7 @@ public class CurrencyPostService {
 
     private Function<RateDto, CurrencyDto> mapValueCreator(Command command) {
         return value -> {
-            BigDecimal fee = value.getRate().multiply(provision).multiply(new BigDecimal(command.getAmount()));
+            BigDecimal fee = value.getRate().multiply(PROVISION).multiply(new BigDecimal(command.getAmount()));
             return currencyDtoBuild(command, value, fee);
         };
     }
@@ -40,6 +40,7 @@ public class CurrencyPostService {
     private CurrencyDto currencyDtoBuild(Command command, RateDto value, BigDecimal fee) {
         return CurrencyDto.builder()
                 .amount(command.getAmount())
+                .result(value.getRate().multiply(new BigDecimal(command.getAmount())).add(fee))
                 .fee(fee)
                 .rate(value.getRate())
                 .build();

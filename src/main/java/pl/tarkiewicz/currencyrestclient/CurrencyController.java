@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.tarkiewicz.currencyrestclient.getDto.GetResponseDto;
 import pl.tarkiewicz.currencyrestclient.postDto.Command;
+import pl.tarkiewicz.currencyrestclient.postDto.PostResponseDto;
 import pl.tarkiewicz.currencyrestclient.result.OperationResult;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyGetService;
 import pl.tarkiewicz.currencyrestclient.service.CurrencyPostService;
@@ -44,7 +45,7 @@ public class CurrencyController {
     public ResponseEntity<?> exchangeCurrency(@RequestBody Command command) {
         ResponseEntity<?> responseEntity = getResponse(command);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return OperationResult.success(currencyPostService.successResultCreator(command, (GetResponseDto) responseEntity.getBody()));
+            return OperationResult.success(currencyPostService.apply(command, (GetResponseDto) responseEntity.getBody()));
         } else {
             return responseEntity;
         }
