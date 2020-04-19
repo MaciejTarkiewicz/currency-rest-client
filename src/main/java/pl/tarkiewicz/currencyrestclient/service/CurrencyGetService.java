@@ -1,4 +1,4 @@
-package pl.tarkiewicz.currencyrestclient;
+package pl.tarkiewicz.currencyrestclient.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class CurrencyService {
+public class CurrencyGetService {
 
     @Value("${api.key}")
     private String key;
@@ -32,7 +32,8 @@ public class CurrencyService {
         }
     }
 
-    public Optional<String> prepareBody(String currency, List<String> filter, RestTemplate restTemplate) {
+    public Optional<String> prepareBody(String currency, List<String> filter) {
+        RestTemplate restTemplate = new RestTemplate();
         return Optional.ofNullable(restTemplate.exchange(createUrl(currency, filter), HttpMethod.GET, prepareHeaders(), String.class).getBody());
     }
 

@@ -2,11 +2,11 @@ package pl.tarkiewicz.currencyrestclient.result;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import pl.tarkiewicz.currencyrestclient.getDto.GetResponseDto;
+import pl.tarkiewicz.currencyrestclient.postDto.PostResponseDto;
 
-public class OperationResult {
+public class PostOperationResult {
 
-    public static ResponseEntity<?> success(GetResponseDto message) {
+    public static ResponseEntity<?> success(PostResponseDto message) {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
