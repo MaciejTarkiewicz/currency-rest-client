@@ -15,7 +15,7 @@
 <li>Rate</li>
 <li>Amount</li>
 <li>Fee = Rate * 0.01 * Amount</li>
-<li>Result = Rate * Amount + Fee/li>
+<li>Result = Rate * Amount + Fee</li>
 </ul>
 
 
